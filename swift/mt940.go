@@ -3,6 +3,8 @@ package swift
 import (
 	"bytes"
 	"fmt"
+	"github.com/shopspring/decimal"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -33,9 +35,9 @@ func (m *MT940) AccountTransactions() []domain.AccountTransaction {
 	for _, transactionSequence := range m.Transactions {
 		tr := transactionSequence.Transaction
 		descr := transactionSequence.Description
-		var amount float64
+		var amount decimal.Decimal
 		if tr.DebitCreditIndicator == "D" {
-			amount = -tr.Amount
+			amount = tr.Amount.Neg()
 		} else {
 			amount = tr.Amount
 		}
@@ -146,14 +148,14 @@ type BalanceTag struct {
 	DebitCreditIndicator string
 	BookingDate          domain.ShortDate
 	Currency             string
-	Amount               float64
+	Amount               decimal.Decimal
 }
 
 // Balance returns the balance embodied in b
 func (b *BalanceTag) Balance() domain.Balance {
 	amount := b.Amount
 	if b.DebitCreditIndicator == "D" {
-		amount = -amount
+		amount = amount.Neg()
 	}
 	return domain.Balance{
 		Amount:           domain.Amount{Amount: amount, Currency: b.Currency},
@@ -181,7 +183,7 @@ func (b *BalanceTag) Unmarshal(value []byte) error {
 	b.BookingDate = domain.NewShortDate(date)
 	b.Currency = string(buf.Next(3))
 	amountString := strings.Replace(buf.String(), ",", ".", 1)
-	amount, err := strconv.ParseFloat(amountString, 64)
+	amount, err := decimal.NewFromString(amountString)
 	if err != nil {
 		return errors.Wrap(err, "MT940 Balance tag: error unmarshaling amount")
 	}
@@ -203,7 +205,7 @@ type TransactionTag struct {
 	BookingDate           domain.ShortDate
 	DebitCreditIndicator  string
 	CurrencyKind          string
-	Amount                float64
+	Amount                decimal.Decimal
 	BookingKey            string
 	Reference             string
 	BankReference         string
