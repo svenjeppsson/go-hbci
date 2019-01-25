@@ -1,14 +1,14 @@
 package swift
 
 import (
+	"github.com/kr/pretty"
+	"github.com/mitch000001/go-hbci/domain"
+	"github.com/shopspring/decimal"
 	"reflect"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/kr/pretty"
-	"github.com/mitch000001/go-hbci/domain"
 )
 
 func TestAccountTagUnmarshal(t *testing.T) {
@@ -51,7 +51,7 @@ func TestTransactionTagUnmarshal(t *testing.T) {
 				BookingDate:           domain.ShortDate{Time: domain.Date(2015, time.December, 2, time.Local).Truncate(24 * time.Hour)},
 				DebitCreditIndicator:  "D",
 				CurrencyKind:          "R",
-				Amount:                4.52,
+				Amount:                decimal.RequireFromString("4.52"),
 				BookingKey:            "024",
 				Reference:             "NONREF",
 				BankReference:         "ABC",
@@ -67,7 +67,7 @@ func TestTransactionTagUnmarshal(t *testing.T) {
 				BookingDate:           domain.ShortDate{Time: domain.Date(2016, time.January, 2, time.Local).Truncate(24 * time.Hour)},
 				DebitCreditIndicator:  "D",
 				CurrencyKind:          "R",
-				Amount:                4.52,
+				Amount:                decimal.RequireFromString("4.52"),
 				BookingKey:            "024",
 				Reference:             "NONREF",
 				BankReference:         "ABC",
@@ -83,7 +83,7 @@ func TestTransactionTagUnmarshal(t *testing.T) {
 				BookingDate:           domain.ShortDate{Time: domain.Date(2015, 8, 3, time.Local).Truncate(24 * time.Hour)},
 				DebitCreditIndicator:  "D",
 				CurrencyKind:          "R",
-				Amount:                4.52,
+				Amount:                decimal.RequireFromString("4.52"),
 				BookingKey:            "024",
 				Reference:             "NONREF",
 				BankReference:         "ABC",
@@ -99,7 +99,7 @@ func TestTransactionTagUnmarshal(t *testing.T) {
 				BookingDate:          domain.ShortDate{Time: domain.Date(2015, 8, 3, time.Local).Truncate(24 * time.Hour)},
 				DebitCreditIndicator: "D",
 				CurrencyKind:         "R",
-				Amount:               4.52,
+				Amount:               decimal.RequireFromString("4.52"),
 				BookingKey:           "024",
 				Reference:            "NONREF",
 				BankReference:        "ABC",
@@ -114,7 +114,7 @@ func TestTransactionTagUnmarshal(t *testing.T) {
 				BookingDate:           domain.ShortDate{Time: domain.Date(2015, 8, 3, time.Local).Truncate(24 * time.Hour)},
 				DebitCreditIndicator:  "D",
 				CurrencyKind:          "R",
-				Amount:                4.52,
+				Amount:                decimal.RequireFromString("4.52"),
 				BookingKey:            "024",
 				Reference:             "NONREF",
 				AdditionalInformation: "DEF",
@@ -129,7 +129,7 @@ func TestTransactionTagUnmarshal(t *testing.T) {
 				BookingDate:          domain.ShortDate{Time: domain.Date(2015, 8, 3, time.Local).Truncate(24 * time.Hour)},
 				DebitCreditIndicator: "D",
 				CurrencyKind:         "R",
-				Amount:               4.52,
+				Amount:               decimal.RequireFromString("4.52"),
 				BookingKey:           "024",
 				Reference:            "NONREF",
 			},

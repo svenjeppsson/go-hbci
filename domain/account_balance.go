@@ -27,14 +27,14 @@ func (ab AccountBalances) String() string {
 		buf.WriteString("\t")
 		buf.WriteString(a.BookedBalance.TransmissionDate.Format("2006-01-02"))
 		buf.WriteString("\t")
-		buf.WriteString(fmt.Sprintf("%.2f %s", a.BookedBalance.Amount.Amount, a.BookedBalance.Amount.Currency))
-		if a.EarmarkedBalance != nil && a.EarmarkedBalance.Amount.Amount != 0.0 {
-			fmt.Fprintf(&buf, " (%.2f %s)*", a.EarmarkedBalance.Amount.Amount, a.EarmarkedBalance.Amount.Currency)
+		buf.WriteString(fmt.Sprintf("%s %s", a.BookedBalance.Amount.Amount.StringFixed(2), a.BookedBalance.Amount.Currency))
+		if a.EarmarkedBalance != nil && !a.EarmarkedBalance.Amount.Amount.IsZero() {
+			fmt.Fprintf(&buf, " (%s %s)*", a.EarmarkedBalance.Amount.Amount.StringFixed(2), a.EarmarkedBalance.Amount.Currency)
 			containsEarmarkedBalances = true
 		}
 		buf.WriteString("\t")
 		if a.CreditLimit != nil {
-			buf.WriteString(fmt.Sprintf("%.2f %s", a.CreditLimit.Amount, a.CreditLimit.Currency))
+			buf.WriteString(fmt.Sprintf("%s %s", a.CreditLimit.Amount.StringFixed(2), a.CreditLimit.Currency))
 		} else {
 			buf.WriteString(" - ")
 		}
@@ -77,7 +77,7 @@ func (a AccountBalance) String() string {
 	buf.WriteString("\t")
 	buf.WriteString(a.BookedBalance.TransmissionDate.Format("2006-01-02"))
 	buf.WriteString("\t")
-	buf.WriteString(fmt.Sprintf("%.2f %s", a.BookedBalance.Amount.Amount, a.BookedBalance.Amount.Currency))
+	buf.WriteString(fmt.Sprintf("%s %s", a.BookedBalance.Amount.Amount.StringFixed(2), a.BookedBalance.Amount.Currency))
 	var out bytes.Buffer
 	tabw := tabwriter.NewWriter(&out, 24, 1, 0, ' ', tabwriter.TabIndent)
 	fmt.Fprint(tabw, buf.String())

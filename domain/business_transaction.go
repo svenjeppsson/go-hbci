@@ -1,8 +1,10 @@
 package domain
 
+import "github.com/shopspring/decimal"
+
 // Amount represents a value associated with a currency
 type Amount struct {
-	Amount   float64
+	Amount   decimal.Decimal
 	Currency string
 }
 

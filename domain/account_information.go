@@ -28,7 +28,7 @@ func (ai AccountInfos) String() string {
 		buf.WriteString(a.ProductID)
 		if a.Limit != nil {
 			buf.WriteString("\t")
-			fmt.Fprintf(&buf, "%s: %.2f %s", a.Limit.Kind, a.Limit.Amount.Amount, a.Limit.Amount.Currency)
+			fmt.Fprintf(&buf, "%s: %s %s", a.Limit.Kind, a.Limit.Amount.Amount.StringFixed(2), a.Limit.Amount.Currency)
 		} else {
 			buf.WriteString("\t - ")
 		}
@@ -71,7 +71,7 @@ func (a AccountInformation) String() string {
 	buf.WriteString(a.ProductID)
 	if a.Limit != nil {
 		buf.WriteString("\t")
-		fmt.Fprintf(&buf, "%s: %.2f %s", a.Limit.Kind, a.Limit.Amount.Amount, a.Limit.Amount.Currency)
+		fmt.Fprintf(&buf, "%s: %s %s", a.Limit.Kind, a.Limit.Amount.Amount.StringFixed(2), a.Limit.Amount.Currency)
 	} else {
 		buf.WriteString("\t - ")
 	}

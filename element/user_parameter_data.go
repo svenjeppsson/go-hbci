@@ -3,12 +3,12 @@ package element
 import (
 	"bytes"
 	"fmt"
-
 	"github.com/mitch000001/go-hbci/domain"
+	"github.com/shopspring/decimal"
 )
 
 // NewAccountLimit creates a new Account limit
-func NewAccountLimit(kind string, amount float64, currency string, days int) *AccountLimitDataElement {
+func NewAccountLimit(kind string, amount decimal.Decimal, currency string, days int) *AccountLimitDataElement {
 	a := &AccountLimitDataElement{
 		Kind:   NewAlphaNumeric(kind, 1),
 		Amount: NewAmount(amount, currency),

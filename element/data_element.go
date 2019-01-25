@@ -3,13 +3,13 @@ package element
 import (
 	"bytes"
 	"fmt"
+	"github.com/mitch000001/go-hbci/charset"
+	"github.com/shopspring/decimal"
 	"reflect"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/mitch000001/go-hbci/charset"
 )
 
 // DataElement represent the general interface of a DataElement used by HBCI
@@ -354,21 +354,21 @@ func (n *NumberDataElement) UnmarshalHBCI(value []byte) error {
 	return nil
 }
 
-// NewFloat returns a new FloatDataElement
-func NewFloat(val float64, maxLength int) *FloatDataElement {
-	return &FloatDataElement{&basicDataElement{val, floatDE, maxLength, false}}
+// NewDecimal returns a new DecimalDataElement
+func NewDecimal(val decimal.Decimal, maxLength int) *DecimalDataElement {
+	return &DecimalDataElement{&basicDataElement{val, floatDE, maxLength, false}}
 }
 
-// FloatDataElement represents a float in HBCI
-type FloatDataElement struct {
+// DecimalDataElement represents a float in HBCI
+type DecimalDataElement struct {
 	*basicDataElement
 }
 
 // Val returns the value of f as float64
-func (f *FloatDataElement) Val() float64 { return f.val.(float64) }
+func (f *DecimalDataElement) Val() decimal.Decimal { return f.val.(decimal.Decimal) }
 
-func (f *FloatDataElement) String() string {
-	str := strconv.FormatFloat(f.Val(), 'f', -1, 64)
+func (f *DecimalDataElement) String() string {
+	str := f.Val().String()
 	str = strings.Replace(str, ".", ",", 1)
 	if !strings.Contains(str, ",") {
 		str = str + ","
@@ -377,18 +377,18 @@ func (f *FloatDataElement) String() string {
 }
 
 // MarshalHBCI marshals f into HBCI wire format
-func (f *FloatDataElement) MarshalHBCI() ([]byte, error) {
+func (f *DecimalDataElement) MarshalHBCI() ([]byte, error) {
 	return charset.ToISO8859_1(f.String()), nil
 }
 
 // UnmarshalHBCI unmarshals value into f
-func (f *FloatDataElement) UnmarshalHBCI(value []byte) error {
+func (f *DecimalDataElement) UnmarshalHBCI(value []byte) error {
 	str := strings.Replace(charset.ToUTF8(value), ",", ".", 1)
-	val, err := strconv.ParseFloat(str, 64)
+	val, err := decimal.NewFromString(str)
 	if err != nil {
 		return err
 	}
-	*f = FloatDataElement{&basicDataElement{val, floatDE, len(value), false}}
+	*f = DecimalDataElement{&basicDataElement{val, floatDE, len(value), false}}
 	return nil
 }
 
@@ -736,15 +736,15 @@ func (c *CurrencyDataElement) UnmarshalHBCI(value []byte) error {
 }
 
 // NewValue returns a new ValueDataElement
-func NewValue(val float64) *ValueDataElement {
-	f := NewFloat(val, 15)
+func NewValue(val decimal.Decimal) *ValueDataElement {
+	f := NewDecimal(val, 15)
 	f.typ = valueDE
 	return &ValueDataElement{f}
 }
 
 // A ValueDataElement represents a float which can have upto 15 characters
 type ValueDataElement struct {
-	*FloatDataElement
+	*DecimalDataElement
 }
 
 // Type returns the DataElementType of v
@@ -754,7 +754,7 @@ func (v *ValueDataElement) Type() DataElementType {
 
 // UnmarshalHBCI unmarshals value into v
 func (v *ValueDataElement) UnmarshalHBCI(value []byte) error {
-	var f FloatDataElement
+	var f DecimalDataElement
 	err := f.UnmarshalHBCI(value)
 	if err != nil {
 		return err

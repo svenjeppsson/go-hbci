@@ -24,3 +24,4 @@ The implemented standard conforms to HBCI 2.2 and FINTS 3.0.
 - [x] Listing transactions
 - [ ] Some other read only action
 - [ ] Write access
+

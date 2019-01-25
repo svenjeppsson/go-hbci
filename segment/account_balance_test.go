@@ -1,11 +1,11 @@
 package segment
 
 import (
-	"testing"
-	"time"
-
 	"github.com/mitch000001/go-hbci/domain"
 	"github.com/mitch000001/go-hbci/element"
+	"github.com/shopspring/decimal"
+	"testing"
+	"time"
 )
 
 func TestAccountBalanceResponseSegmentUnmarshalHBCI(t *testing.T) {
@@ -16,10 +16,10 @@ func TestAccountBalanceResponseSegmentUnmarshalHBCI(t *testing.T) {
 		AccountConnection:  element.NewAccountConnection(domain.AccountConnection{AccountID: "100000000", CountryCode: 280, BankID: "10000000"}),
 		AccountProductName: element.NewAlphaNumeric("Sichteinlagen", 35),
 		AccountCurrency:    element.NewCurrency("EUR"),
-		BookedBalance:      element.NewBalance(domain.Amount{Amount: 1000.15, Currency: "EUR"}, date, false),
-		EarmarkedBalance:   element.NewBalance(domain.Amount{Amount: 20, Currency: "EUR"}, date, false),
-		CreditLimit:        element.NewAmount(500, "EUR"),
-		AvailableAmount:    element.NewAmount(1499.85, "EUR"),
+		BookedBalance:      element.NewBalance(domain.Amount{Amount: decimal.RequireFromString("1000.15"), Currency: "EUR"}, date, false),
+		EarmarkedBalance:   element.NewBalance(domain.Amount{Amount: decimal.RequireFromString("20"), Currency: "EUR"}, date, false),
+		CreditLimit:        element.NewAmount(decimal.RequireFromString("500"), "EUR"),
+		AvailableAmount:    element.NewAmount(decimal.RequireFromString("1499.85"), "EUR"),
 	}
 	expectedSegment.Segment = NewReferencingBasicSegment(4, 3, expectedSegment)
 

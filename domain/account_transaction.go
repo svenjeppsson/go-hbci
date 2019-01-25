@@ -21,9 +21,9 @@ func (at AccountTransactions) String() string {
 			first.Account.BankID, first.Account.AccountID,
 		)
 		fmt.Fprintf(
-			&buf, "Balance at %s: %.2f %s\n",
+			&buf, "Balance at %s: %s %s\n",
 			first.AccountBalanceBefore.TransmissionDate.Format("2006-01-02"),
-			first.AccountBalanceBefore.Amount.Amount,
+			first.AccountBalanceBefore.Amount.Amount.StringFixed(2),
 			first.AccountBalanceBefore.Amount.Currency,
 		)
 	}
@@ -34,7 +34,7 @@ func (at AccountTransactions) String() string {
 		buf.WriteString("\t")
 		buf.WriteString(a.BookingText)
 		buf.WriteString("\t")
-		buf.WriteString(fmt.Sprintf("%.2f %s", a.Amount.Amount, a.Amount.Currency))
+		buf.WriteString(fmt.Sprintf("%s %s", a.Amount.Amount.StringFixed(2), a.Amount.Currency))
 		buf.WriteString("\t")
 		buf.WriteString(a.BankID)
 		buf.WriteString("\t")
@@ -48,9 +48,9 @@ func (at AccountTransactions) String() string {
 	if len(at) != 0 {
 		last := at[len(at)-1]
 		fmt.Fprintf(
-			&buf, "Balance at %s: %.2f %s\n",
+			&buf, "Balance at %s: %s %s\n",
 			last.AccountBalanceAfter.TransmissionDate.Format("2006-01-02"),
-			last.AccountBalanceAfter.Amount.Amount,
+			last.AccountBalanceAfter.Amount.Amount.StringFixed(2),
 			last.AccountBalanceAfter.Amount.Currency,
 		)
 	}
@@ -85,7 +85,7 @@ func (a AccountTransaction) String() string {
 	buf.WriteString("\n")
 	buf.WriteString(a.BookingDate.Format("2006-01-02"))
 	buf.WriteString("\t")
-	buf.WriteString(fmt.Sprintf("%.2f %s", a.Amount.Amount, a.Amount.Currency))
+	buf.WriteString(fmt.Sprintf("%s %s", a.Amount.Amount.StringFixed(2), a.Amount.Currency))
 	buf.WriteString("\t")
 	buf.WriteString(a.BankID)
 	buf.WriteString("\t")

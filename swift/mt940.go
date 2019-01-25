@@ -275,7 +275,7 @@ func (t *TransactionTag) Unmarshal(value []byte, bookingYear int) error {
 		return err
 	}
 	amountBytes = bytes.Replace(amountBytes[:len(amountBytes)-1], []byte(","), []byte("."), 1)
-	amount, err := strconv.ParseFloat(string(amountBytes), 64)
+	amount, err := decimal.NewFromString(string(amountBytes))
 	if err != nil {
 		return errors.Wrap(err, "MT940 Transaction tag: error unmarshaling amount")
 	}

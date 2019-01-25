@@ -1,13 +1,13 @@
 package client
 
 import (
+	"github.com/mitch000001/go-hbci/domain"
+	https "github.com/mitch000001/go-hbci/transport/https"
+	"github.com/shopspring/decimal"
 	"net/http"
 	"reflect"
 	"testing"
 	"time"
-
-	"github.com/mitch000001/go-hbci/domain"
-	https "github.com/mitch000001/go-hbci/transport/https"
 )
 
 func TestClientBalances(t *testing.T) {
@@ -70,15 +70,15 @@ func TestClientBalances(t *testing.T) {
 		ProductName: "Sichteinlagen",
 		Currency:    "EUR",
 		BookedBalance: domain.Balance{
-			Amount:           domain.Amount{Amount: 1000.15, Currency: "EUR"},
+			Amount:           domain.Amount{Amount: decimal.RequireFromString("1000.15"), Currency: "EUR"},
 			TransmissionDate: date,
 		},
 		EarmarkedBalance: &domain.Balance{
-			Amount:           domain.Amount{Amount: 20, Currency: "EUR"},
+			Amount:           domain.Amount{Amount: decimal.RequireFromString("20"), Currency: "EUR"},
 			TransmissionDate: date,
 		},
-		CreditLimit:     &domain.Amount{Amount: 500, Currency: "EUR"},
-		AvailableAmount: &domain.Amount{Amount: 1499.85, Currency: "EUR"},
+		CreditLimit:     &domain.Amount{Amount: decimal.RequireFromString("500"), Currency: "EUR"},
+		AvailableAmount: &domain.Amount{Amount: decimal.RequireFromString("1499.85"), Currency: "EUR"},
 	}
 
 	if len(balances) != 1 {

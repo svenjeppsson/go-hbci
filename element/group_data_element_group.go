@@ -2,16 +2,15 @@ package element
 
 import (
 	"fmt"
-	"math"
-	"strconv"
-	"time"
-
 	"github.com/mitch000001/go-hbci/charset"
 	"github.com/mitch000001/go-hbci/domain"
+	"github.com/shopspring/decimal"
+	"strconv"
+	"time"
 )
 
 // NewAmount returns a new AmountDataElement
-func NewAmount(value float64, currency string) *AmountDataElement {
+func NewAmount(value decimal.Decimal, currency string) *AmountDataElement {
 	a := &AmountDataElement{
 		Amount:   NewValue(value),
 		Currency: NewCurrency(currency),
@@ -189,7 +188,7 @@ func NewInternationalAccountConnection(conn domain.InternationalAccountConnectio
 		BIC:                       NewAlphaNumeric(conn.BIC, 11),
 		AccountID:                 NewIdentification(conn.AccountID),
 		SubAccountCharacteristics: NewIdentification(conn.SubAccountCharacteristics),
-		BankID: NewBankIdentification(conn.BankID),
+		BankID:                    NewBankIdentification(conn.BankID),
 	}
 	i.DataElement = NewGroupDataElementGroup(internationalAccountConnectionGDEG, 5, i)
 	return i
@@ -288,14 +287,14 @@ func (i *InternationalAccountConnectionDataElement) Val() domain.InternationalAc
 // NewBalance returns a new BalanceDataElement
 func NewBalance(amount domain.Amount, date time.Time, withTime bool) *BalanceDataElement {
 	var debitCredit string
-	if amount.Amount < 0 {
+	if amount.Amount.IsNegative() {
 		debitCredit = "D"
 	} else {
 		debitCredit = "C"
 	}
 	b := &BalanceDataElement{
 		DebitCreditIndicator: NewAlphaNumeric(debitCredit, 1),
-		Amount:               NewValue(math.Abs(amount.Amount)),
+		Amount:               NewValue(amount.Amount.Abs()),
 		Currency:             NewCurrency(amount.Currency),
 		TransmissionDate:     NewDate(date),
 	}
@@ -332,7 +331,7 @@ func (b *BalanceDataElement) Balance() domain.Balance {
 	sign := b.DebitCreditIndicator.Val()
 	val := b.Amount.Val()
 	if sign == "D" {
-		val = -val
+		val = val.Neg()
 	}
 	currency := b.Currency.Val()
 	amount := domain.Amount{
